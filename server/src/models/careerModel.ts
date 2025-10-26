@@ -12,7 +12,7 @@ export async function createCareer(req: CareerType) {
   log.info("model called");
 
   log.debug(`career_name: ${ req.career_name }`);
-  const result = pool.query(
+  const result = await pool.query(
     `
       INSERT INTO careers
       (career_name, description)
@@ -28,7 +28,7 @@ export async function readCareer(req: CareerType) {
   const log = Logger.generate("readCareer");
   log.info("model called");
 
-  const result = pool.query(
+  const result = await pool.query(
     `
       SELECT * FROM careers 
       WHERE career_name = $1

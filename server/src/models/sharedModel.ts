@@ -73,8 +73,8 @@ export async function readAccountRole(req: AccountRoleType) {
 
   const result = await pool.query(
     `
-      SELECT role_name FROM roles
-      INNER JOIN account_roles 
+      SELECT role_name, access_level FROM roles
+      INNER JOIN account_roles
       ON account_roles.role_id = roles.role_id
       WHERE account_roles.account_id = $1
     `, [req.account_id]

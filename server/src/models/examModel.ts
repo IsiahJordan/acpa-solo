@@ -29,7 +29,7 @@ export async function createExam(req: ExamType) {
   log.info("model called");
 
   log.debug(`exam_name: ${ req.exam_name }`);
-  const result = pool.query(
+  const result = await pool.query(
     `
       INSERT INTO exams
       (exam_name, description, is_visible, attempts_allowed)
@@ -45,7 +45,7 @@ export async function readExam(req: ExamType) {
   const log = Logger.generate("readExam");
   log.info("model called");
 
-  const result = pool.query(
+  const result = await pool.query(
     `
       SELECT * FROM exams
       WHERE exam_name = $1
@@ -60,7 +60,7 @@ export async function createQuestion(req: QuestionType) {
   const log = Logger.generate("createQuestion");
   log.info("model called");
 
-  const result = pool.query(
+  const result = await pool.query(
     `
       INSERT INTO questions
       (content)
@@ -76,7 +76,7 @@ export async function readQuestion(req: QuestionType) {
   const log = Logger.generate("readQuestion");
   log.info("model called");
 
-  const result = pool.query(
+  const result = await pool.query(
     `
       SELECT * FROM questions
       WHERE exam_name = $1
@@ -92,7 +92,7 @@ export async function createSection(req: SectionType) {
   log.info("model called");
 
   log.debug(`section_name: ${ req.section_name }`);
-  const result = pool.query(
+  const result = await pool.query(
     `
       INSERT INTO sections
       (section_name, description)
@@ -108,7 +108,7 @@ export async function readSection(req: SectionType) {
   const log = Logger.generate("readSection");
   log.info("model called");
 
-  const result = pool.query(
+  const result = await pool.query(
     `
       SELECT * FROM sections
       WHERE exam_name = $1
@@ -124,7 +124,7 @@ export async function createSubject(req: SubjectType) {
   log.info("model called");
 
   log.debug(`subject_name: ${ req.subject_name }`);
-  const result = pool.query(
+  const result = await pool.query(
     `
       INSERT INTO subjects
       (subject_name)
@@ -140,7 +140,7 @@ export async function readSubject(req: SubjectType) {
   const log = Logger.generate("readSubject");
   log.info("model called");
 
-  const result = pool.query(
+  const result = await pool.query(
     `
       SELECT * FROM subject
       WHERE subject_name = $1

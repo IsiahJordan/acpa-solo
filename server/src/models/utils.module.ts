@@ -10,7 +10,7 @@ import Logger from "../utility/log.ts";
 // or any create function returns 
 // true or false 
 export function verifyCreate(result: object, log: Logger) {
-  log.debug(result.rows);
+  log.debug(JSON.stringify(result));
   if (result.rowCount > 0) {
     log.debug("successful insert");
     return true;

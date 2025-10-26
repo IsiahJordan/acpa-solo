@@ -69,8 +69,9 @@ export async function updateAccount(uuid: string, new_data: AccountType, req: "e
 export async function readRole(req: RoleType) {
   const log = Logger.generate("readRole");
   log.info("model called");
+  log.debug(req.role_name);
 
-  const result = pool.query(
+  const result = await pool.query(
     `
       SELECT * FROM roles  
       WHERE role_name = $1
