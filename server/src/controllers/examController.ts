@@ -7,6 +7,7 @@ import {
   createQuestion, readQuestion,
   createSubject, readSubject
 } from "../models/examModel.ts";
+import { addSectionAssignment, fetchSectionAssignment } from "./sharedController.ts";
 
 export async function addExam(req, res) {
   const log = Logger.generate("addExam");
@@ -29,7 +30,7 @@ export async function addExam(req, res) {
 export async function fetchExam(req, res) {
   const log = Logger.generate("fetchExam");
 
-  const { exam_name } = req.body;
+  const { exam_name } = req.query;
   log.debug(`exam_name: ${ exam_name }`);
 
   const result = await createExam({ exam_name: exam_name });
@@ -54,7 +55,7 @@ export async function addSection(req, res) {
 export async function fetchSection(req, res) {
   const log = Logger.generate("fetchSection");
 
-  const { section_name } = req.body;
+  const { section_name } = req.query;
   log.debug(`section_name: ${ section_name }`);
 
   const result = await createSection({ 
@@ -81,13 +82,35 @@ export async function addQuestion(req, res) {
 export async function fetchQuestion(req, res) {
   const log = Logger.generate("fetchQuestion");
 
-  const { question_name } = req.body;
+  const { question_name } = req.query;
   log.debug(`question_name: ${ question_name }`);
 
   const result = await readQuestion({ 
     question_name: question_name
   });
 
+  return verifyRecieved(result, res);
+}
+
+export async function addSectionContent(req, res){
+  const log = Logger.generate("addSectionContent");
+
+  const { section_id, question_id } = req.body;
+  log.debug(`section id: ${ section_id } and question id: ${ question_id }`);
+
+  const result = await addSectionAssignment({ section_id: section_id, question_id: question_id });
+  
+  return verifyTransaction(result, res);
+}
+
+export async function fetchSectionContent(req, res){
+  const log = Logger.generate("fetchSectionContent");
+
+  const { section_name } = req.query;
+  log.debug(`section name: ${ section_name }`);
+
+  const result = await fetchSectionAssignment({ section_name: section_name});
+  
   return verifyRecieved(result, res);
 }
 
@@ -107,7 +130,7 @@ export async function addSubject(req, res) {
 export async function fetchSubject(req, res) {
   const log = Logger.generate("fetchSubject");
 
-  const { subject_name } = req.body;
+  const { subject_name } = req.query;
   log.debug(`subject_name: ${ subject_name }`);
 
   const result = await readSubject({ 

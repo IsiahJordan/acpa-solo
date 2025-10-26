@@ -41,6 +41,17 @@ export function verifyRead(result: object, log: Logger) {
   return undefined;
 }
 
+export function verifyReads(result: object, log: Logger) {
+  log.debug(result);
+  if (result.rowCount > 0) {
+    log.debug("Successful read to accounts");
+    return result.rows;
+  }
+
+  log.warn("failed to find account");
+  return undefined;
+}
+
 // dynamic update calls 
 //
 // pool : is the pool connection to the db 

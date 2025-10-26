@@ -4,7 +4,7 @@
 
 import pool from "../utility/db.js";
 import Logger from "../utility/log.ts";
-import { readAccountRole } from "../models/sharedModel.ts";
+import { readAccountRole, createSectionAssignment, readSectionAssignment } from "../models/sharedModel.ts";
 import { verifyTransaction, verifyRecieved } from "./utils.module.ts";
 import { readRole } from "../models/accountModel.ts";
 
@@ -23,6 +23,24 @@ export async function fetchAccessLevel(req) {
 
   const result = await readRole({ role_name: req.role });
   log.debug(result);
+
+  log.debug("end of call");
+  return result;
+}
+
+export async function addSectionAssignment(req) {
+  const log = Logger.generate("addSectionAssignment");
+
+  const result = await createSectionAssignment({ section_id: req.section_id, question_id: req.question_id });
+
+  log.debug("end of call");
+  return result;
+}
+
+export async function fetchSectionAssignment(req) {
+  const log = Logger.generate("fetchSectionAssignment");
+
+  const result = await readSectionAssignment({ section_name: req.section_name });
 
   log.debug("end of call");
   return result;

@@ -3,7 +3,7 @@
 // hence why it is called shareModel
 import pool from "../utility/db.js";
 import Logger from "../utility/log.ts";
-import { verifyCreate, verifyRead } from "./utils.module.ts";
+import { verifyCreate, verifyRead, verifyReads } from "./utils.module.ts";
 
 type CareerMetricType = {
   career_id: number;
@@ -14,6 +14,12 @@ type CareerMetricType = {
 type AccountRoleType = {
   account_id: string;
   role_id?: number;
+};
+
+type SectionAssignmentType = {
+  section_name?: string;
+  section_id: string;
+  question_id: string;
 };
 
 export async function createCareerMetric(req: CareerMetricType) {
@@ -84,3 +90,37 @@ export async function readAccountRole(req: AccountRoleType) {
   return verifyRead(result, log);
 }
 
+export async function createSectionAssignment(req: SectionAssignmentType) {
+  const log = Logger.generate("createSectionAssignment");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      INSERT INTO section_assignments
+      (section_id, question_id)
+      VALUES ($1, $2)
+    `, [req.section_id, req.question_id]
+  );
+
+  log.debug("finished result");
+  return verifyCreate(result, log);
+}
+
+export async function readSectionAssignment(req: SectionAssignmentType) {
+  const log = Logger.generate("fetchSectionAssignment");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      SELECT * FROM questions AS q
+      INNER JOIN section_assignments AS sa ON
+      sa.question_id = q.question_id       
+      INNER JOIN sections AS s ON
+      s.section_id = sa.section_id
+      WHERE s.section_name = $1
+    `, [req.section_name]
+  );
+
+  log.debug("finished result");
+  return verifyReads(result, log);
+}

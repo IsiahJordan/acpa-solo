@@ -23,6 +23,11 @@ type SubjectType = {
   subject_name: string;
 };
 
+// the ordering of function request are 
+// placed based in the heirarchy where 
+// subject is the lowest and must be first created 
+// if there is no supporting connection while 
+// exam requires everything below to be specified
 
 export async function createExam(req: ExamType) {
   const log = Logger.generate("createExam");
@@ -56,37 +61,6 @@ export async function readExam(req: ExamType) {
   return verifyRead(result, log);
 }
 
-export async function createQuestion(req: QuestionType) {
-  const log = Logger.generate("createQuestion");
-  log.info("model called");
-
-  const result = await pool.query(
-    `
-      INSERT INTO questions
-      (content)
-      VALUES ($1)
-    `, [req.question_name, req.content]
-  );
-  
-  log.debug("finished result");
-  return verifyCreate(result, log);
-}
-
-export async function readQuestion(req: QuestionType) {
-  const log = Logger.generate("readQuestion");
-  log.info("model called");
-
-  const result = await pool.query(
-    `
-      SELECT * FROM questions
-      WHERE exam_name = $1
-    `, [req.question_name]
-  );
-  
-  log.debug("finished result");
-  return verifyRead(result, log);
-}
-
 export async function createSection(req: SectionType) {
   const log = Logger.generate("createSection");
   log.info("model called");
@@ -111,8 +85,39 @@ export async function readSection(req: SectionType) {
   const result = await pool.query(
     `
       SELECT * FROM sections
-      WHERE exam_name = $1
+      WHERE section_name = $1
     `, [req.section_name]
+  );
+  
+  log.debug("finished result");
+  return verifyRead(result, log);
+}
+
+export async function createQuestion(req: QuestionType) {
+  const log = Logger.generate("createQuestion");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      INSERT INTO questions
+      (question_name, content)
+      VALUES ($1, $2)
+    `, [req.question_name, req.content]
+  );
+  
+  log.debug("finished result");
+  return verifyCreate(result, log);
+}
+
+export async function readQuestion(req: QuestionType) {
+  const log = Logger.generate("readQuestion");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      SELECT * FROM questions
+      WHERE question_name = $1
+    `, [req.question_name]
   );
   
   log.debug("finished result");
@@ -142,7 +147,7 @@ export async function readSubject(req: SubjectType) {
 
   const result = await pool.query(
     `
-      SELECT * FROM subject
+      SELECT * FROM subjects
       WHERE subject_name = $1
     `, [req.subject_name]
   );
