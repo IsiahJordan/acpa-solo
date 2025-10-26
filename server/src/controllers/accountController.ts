@@ -1,5 +1,7 @@
 import Logger from "../utility/log.ts";
-import { createRole, createAccount, readAccount } from "../models/accountModel.ts"
+import { createRole, createAccount, readAccount, readRole } from "../models/accountModel.ts";
+import { fetchAccountRole } from "./sharedController.ts";
+import { signToken } from "../utility/security.ts";
 import bcrypt from "bcrypt";
 import { verifyTransaction } from "./utils.module.ts";
 
@@ -23,7 +25,7 @@ export async function login(req, res) {
 
   const { email, password } = req.body;
   
-  const acc = await readAccount({ email });
+  const acc = await readAccount({ email: email });
   if (!acc) return res.status(400).json({ 
     success: false,
     message: "Failed to get account"
@@ -38,12 +40,38 @@ export async function login(req, res) {
   });
 
   log.debug("success with the password");
+  log.debug(`account id: ${ acc.account_id }`);
+
+  // to fetch role name for authorization
+  const acc_role = await fetchAccountRole({ account_id: acc.account_id });
+
+  if (acc_role === undefined){
+    log.warn("role is not set to account");
+    return res.status(400).json({
+      success: false,
+      message: "Failed to get role"
+    });
+  }
+  log.debug(`role of account: ${ acc_role }`);
+  
+  const auth = { id: acc.account_id, email: email, role: acc_role.role_name };
+  log.debug(`id: ${ auth.id }, email: ${ auth.email }, and role ${ auth.role }`);
+
+  log.debug("generate JWT token");
+  const token = signToken(auth, "1h");
+
+  res.cookie("access_token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 1000
+  })
 
   return res.status(200).json({
     success: true,
     message: "Successful login",
     payload: {
-      key: "test"
+      key: token
     }
   })
 }
@@ -58,3 +86,4 @@ export async function addRole(req, res) {
   
   verifyTransaction(user, res);
 }
+
