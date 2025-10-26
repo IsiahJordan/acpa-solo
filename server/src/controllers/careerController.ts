@@ -6,7 +6,7 @@ import { verifyTransaction, verifyRecieved } from "./utils.module.ts";
 export async function addCareer(req, res) {
   const log = Logger.generate("addCareer");
   
-  const { career_name, description } = req.query;
+  const { career_name, description } = req.body;
   log.debug(`career name: ${ career_name } and description: ${ description }`);
 
   const result = await createCareer({ 

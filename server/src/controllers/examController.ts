@@ -11,7 +11,7 @@ import {
 export async function addExam(req, res) {
   const log = Logger.generate("addExam");
   
-  const { exam_name, description, is_visible, attempts } = req.query;
+  const { exam_name, description, is_visible, attempts } = req.body;
   log.debug(`
     exam_name: ${ exam_name }, description: ${ description }, is_visible: ${ is_visible } and ${ attempts }
   `);
@@ -29,7 +29,7 @@ export async function addExam(req, res) {
 export async function fetchExam(req, res) {
   const log = Logger.generate("fetchExam");
 
-  const { exam_name } = req.query;
+  const { exam_name } = req.body;
   log.debug(`exam_name: ${ exam_name }`);
 
   const result = await createExam({ exam_name: exam_name });
@@ -40,7 +40,7 @@ export async function fetchExam(req, res) {
 export async function addSection(req, res) {
   const log = Logger.generate("addSection");
 
-  const { section_name, description } = req.query;
+  const { section_name, description } = req.body;
   log.debug(`section_name: ${ section_name }, description: ${ description }`);
 
   const result = await createSection({ 
@@ -54,7 +54,7 @@ export async function addSection(req, res) {
 export async function fetchSection(req, res) {
   const log = Logger.generate("fetchSection");
 
-  const { section_name } = req.query;
+  const { section_name } = req.body;
   log.debug(`section_name: ${ section_name }`);
 
   const result = await createSection({ 
@@ -67,7 +67,7 @@ export async function fetchSection(req, res) {
 export async function addQuestion(req, res) {
   const log = Logger.generate("addQuestion");
 
-  const { question_name, content } = req.query;
+  const { question_name, content } = req.body;
   log.debug(`question_name: ${ question_name }`);
 
   const result = await createQuestion({ 
@@ -81,7 +81,7 @@ export async function addQuestion(req, res) {
 export async function fetchQuestion(req, res) {
   const log = Logger.generate("fetchQuestion");
 
-  const { question_name } = req.query;
+  const { question_name } = req.body;
   log.debug(`question_name: ${ question_name }`);
 
   const result = await readQuestion({ 
@@ -94,7 +94,7 @@ export async function fetchQuestion(req, res) {
 export async function addSubject(req, res) {
   const log = Logger.generate("addSubject");
 
-  const { subject_name } = req.query;
+  const { subject_name } = req.body;
   log.debug(`subject_name: ${ subject_name }`);
 
   const result = await createSubject({ 
@@ -107,7 +107,7 @@ export async function addSubject(req, res) {
 export async function fetchSubject(req, res) {
   const log = Logger.generate("fetchSubject");
 
-  const { subject_name } = req.query;
+  const { subject_name } = req.body;
   log.debug(`subject_name: ${ subject_name }`);
 
   const result = await readSubject({ 
