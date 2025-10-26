@@ -7,7 +7,7 @@
 // this is just to check if input 
 // or any create function returns 
 // true or false 
-export async function verifyTransaction(state: bool, res: object) {
+export function verifyTransaction(state: bool, res: object) {
   if (!state) {
     return res.status(400).json({ 
       success: false, 
@@ -22,7 +22,7 @@ export async function verifyTransaction(state: bool, res: object) {
 
 }
 
-export async function verifyRecieved(data: object, res: object) {
+export function verifyRecieved(data: object, res: object) {
   if (!data) {
     return res.status(400).json({
       success: false,
