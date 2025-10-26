@@ -66,16 +66,17 @@ export async function createAccountRole(req: AccountRoleType) {
 }
 
 
-// this role gets the role id and if you which 
-// to get the name, use role id with readRoles 
+// this role gets the role name
 export async function readAccountRole(req: AccountRoleType) {
   const log = Logger.generate("readAccountRole");
   log.info("model called");
 
-  const result = pool.query(
+  const result = await pool.query(
     `
-      SELECT * FROM account_roles  
-      WHERE account_id = $1
+      SELECT role_name FROM roles
+      INNER JOIN account_roles 
+      ON account_roles.role_id = roles.role_id
+      WHERE account_roles.account_id = $1
     `, [req.account_id]
   );
 

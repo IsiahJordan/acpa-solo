@@ -31,6 +31,7 @@ export function verifyUpdate(result: object) {
 }
 
 export function verifyRead(result: object, log: Logger) {
+  log.debug(result);
   if (result.rowCount > 0) {
     log.debug("Successful read to accounts");
     return result.rows[0];
