@@ -86,4 +86,3 @@ export async function addRole(req, res) {
   
   verifyTransaction(user, res);
 }
-
