@@ -1,4 +1,3 @@
-import pool from "../utility/db.js";
 import Logger from "../utility/log.ts";
 import { verifyTransaction, verifyRecieved } from "./utils.module.ts";
 import { 

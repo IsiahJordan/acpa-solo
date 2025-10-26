@@ -11,7 +11,7 @@ export async function createMetric(req: MetricType) {
   log.info("model called");
 
   log.debug(`metric_name: ${ req.metric_name }`);
-  const result = pool.query(
+  const result = await pool.query(
     `
       INSERT INTO metrics
       (metric_name)

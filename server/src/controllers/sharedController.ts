@@ -4,7 +4,15 @@
 
 import pool from "../utility/db.js";
 import Logger from "../utility/log.ts";
-import { readAccountRole, createSectionAssignment, readSectionAssignment } from "../models/sharedModel.ts";
+import { 
+  readAccountRole, 
+  createSectionAssignment, 
+  readSectionAssignment,
+  createCareerMetric,
+  createSubjectMetric,
+  readCareerMetric,
+  readSubjectMetric
+} from "../models/sharedModel.ts";
 import { verifyTransaction, verifyRecieved } from "./utils.module.ts";
 import { readRole } from "../models/accountModel.ts";
 
@@ -41,6 +49,54 @@ export async function fetchSectionAssignment(req) {
   const log = Logger.generate("fetchSectionAssignment");
 
   const result = await readSectionAssignment({ section_name: req.section_name });
+
+  log.debug("end of call");
+  return result;
+}
+
+export async function addCareerMetric(req) {
+  const log = Logger.generate("addCareerMetric");
+  
+  log.debug(`score_bias: ${ req.score_bias }`);
+
+  const result = await createCareerMetric({
+    career_id: req.career_id,
+    metric_id: req.metric_id,
+    score_bias: req.score_bias
+  })
+
+  log.debug("end of call");
+  return result;
+}
+
+export async function fetchCareerMetric(req) {
+  const log = Logger.generate("fetchCareerMetric");
+
+  const result = await readCareerMetric({ career_name: req.career_name })
+
+  log.debug("end of call");
+  return result;
+}
+
+export async function addSubjectMetric(req) {
+  const log = Logger.generate("addSubjectMetric");
+  
+  log.debug(`score_bias: ${ req.score_bias }`);
+
+  const result = await createSubjectMetric({
+    subject_id: req.subject_id,
+    metric_id: req.metric_id,
+    score_bias: req.score_bias
+  })
+
+  log.debug("end of call");
+  return result;
+}
+
+export async function fetchSubjectMetric(req) {
+  const log = Logger.generate("fetchSubjectMetric");
+
+  const result = await readSubjectMetric({ subject_name: req.subject_name })
 
   log.debug("end of call");
   return result;
