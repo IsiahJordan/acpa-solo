@@ -14,16 +14,17 @@ import {
 
 // middleware 
 import { requireBody, requireParams } from "../middleware/validation.ts";
+import { authToken, isAuthorize } from "../middleware/auth.ts";
 
 const router = express.Router();
 
-router.get("/exam/add", requireParams, addExam);
-router.get("/exam/fetch", requireParams, fetchExam);
-router.get("/section/add", requireParams, addSection);
-router.get("/section/fetch", requireParams, fetchSection);
-router.get("/question/add", requireParams, addQuestion);
-router.get("/question/fetch", requireParams, fetchQuestion);
-router.get("/subject/add", requireParams, addSubject);
-router.get("/subject/fetch", requireParams, fetchSubject);
+router.post("/exam/add", requireBody, authToken, isAuthorize, addExam);
+router.post("/exam/fetch", requireBody, authToken, isAuthorize, fetchExam);
+router.post("/section/add", requireBody, authToken, isAuthorize, addSection);
+router.post("/section/fetch", requireBody, authToken, isAuthorize, fetchSection);
+router.post("/question/add", requireBody, authToken, isAuthorize, addQuestion);
+router.post("/question/fetch", requireBody, authToken, isAuthorize, fetchQuestion);
+router.post("/subject/add", requireBody, authToken, isAuthorize, addSubject);
+router.post("/subject/fetch", requireBody, authToken, isAuthorize, fetchSubject);
 
 export default router;
