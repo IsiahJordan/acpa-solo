@@ -7,6 +7,7 @@ type ExamType = {
   description?: string;
   is_visible?: "hidden" | "show" | "archive";
   attempts?: number;
+  duration: number;
 };
 
 type SectionType = {
@@ -37,9 +38,9 @@ export async function createExam(req: ExamType) {
   const result = await pool.query(
     `
       INSERT INTO exams
-      (exam_name, description, is_visible, attempts_allowed)
-      VALUES ($1, $2, $3, $4)
-    `, [req.exam_name, req.description, req.is_visible, req.attempts]
+      (exam_name, description, is_visible, attempts_allowed, duration)
+      VALUES ($1, $2, $3, $4, $5)
+    `, [req.exam_name, req.description, req.is_visible, req.attempts, req.duration]
   );
   
   log.debug("finished result");
@@ -53,8 +54,8 @@ export async function readExam(req: ExamType) {
   const result = await pool.query(
     `
       SELECT * FROM exams
-      WHERE exam_name = $1
-    `, [req.exam_name]
+      WHERE exam_id = $1
+    `, [req.exam_id]
   );
   
   log.debug("finished result");

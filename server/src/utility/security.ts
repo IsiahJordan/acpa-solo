@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import * as crypto from "node:crypto";
 import "dotenv/config";
 
 export function signToken(data, expires){ 
@@ -19,3 +20,7 @@ export function verifyToken(token){
   }
 }
 
+export function genCharCode(length) {
+  const code = crypto.randomBytes(length).toString("hex");
+  return code;
+}

@@ -11,7 +11,13 @@ import {
   createCareerMetric,
   createSubjectMetric,
   readCareerMetric,
-  readSubjectMetric
+  readSubjectMetric,
+  createClassroomExam,
+  createClassroomAccount,
+  readClassroomAccount,
+  readClassroomExam,
+  createExamSection,
+  readExamSection
 } from "../models/sharedModel.ts";
 import { verifyTransaction, verifyRecieved } from "./utils.module.ts";
 import { readRole } from "../models/accountModel.ts";
@@ -99,5 +105,48 @@ export async function fetchSubjectMetric(req) {
   const result = await readSubjectMetric({ subject_name: req.subject_name })
 
   log.debug("end of call");
+  return result;
+}
+
+export async function addClassroomExam(req) {
+  const log = Logger.generate("addClassroomExam");
+  log.debug(req.class_id);
+
+  const result = await createClassroomExam({ class_id: req.class_id, exam_id: req.exam_id });
+  return result;
+}
+
+export async function fetchClassroomExam(req) {
+  const log = Logger.generate("fetchClassroomExam");
+
+  const result = await readClassroomExam({ class_id: req.class_id });
+  return result;
+}
+
+export async function addClassroomAccount(req) {
+  const log = Logger.generate("addClassroomAccount");
+
+  const result = await createClassroomAccount({ class_id: req.class_id, account_id: req.account_id });
+  return result;
+}
+
+export async function fetchClassroomAccount(req) {
+  const log = Logger.generate("fetchClassroomAccount");
+
+  const result = await readClassroomAccount({ account_id: req.account_id });
+  return result;
+}
+
+export async function addExamSection(req) {
+  const log = Logger.generate("addExamSection");
+
+  const result = await createExamSection({ exam_id: req.exam_id, section_id: req.section_id });
+  return result;
+}
+
+export async function fetchExamSection(req) {
+  const log = Logger.generate("fetchExamSection");
+
+  const result = await readExamSection({ exam_id: req.exam_id });
   return result;
 }

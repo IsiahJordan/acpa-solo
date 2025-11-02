@@ -11,7 +11,9 @@ import {
   addSectionContent,
   fetchSectionContent,
   addSubject,
-  fetchSubject
+  fetchSubject,
+  addExamList,
+  fetchExamList
 } from '../controllers/examController.ts';
 
 // middleware 
@@ -20,8 +22,8 @@ import { authToken, isAuthorize } from "../middleware/auth.ts";
 
 const router = express.Router();
 
-router.post("/exam/add", requireBody, authToken, isAuthorize, addExam);
-router.get("/exam/fetch", requireParams, fetchExam);
+router.post("/add", requireBody, authToken, isAuthorize, addExam);
+router.get("/fetch", requireParams, fetchExam);
 router.post("/section/add", requireBody, authToken, isAuthorize, addSection);
 router.get("/section/fetch", requireParams, fetchSection);
 router.post("/question/add", requireBody, authToken, isAuthorize, addQuestion);
@@ -33,5 +35,7 @@ router.get("/subject/fetch", requireParams, fetchSubject);
 
 router.post("/section/question/add", requireBody, authToken, isAuthorize, addSectionContent);
 router.get("/section/question/fetch", requireParams, fetchSectionContent);
+router.post("/list/add", requireBody, authToken, isAuthorize, addExamList);
+router.get("/list/fetch", requireParams, fetchExamList);
 
 export default router;

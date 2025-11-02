@@ -9,6 +9,15 @@ export async function register(req, res) {
   const log = Logger.generate("register");
 
   const { email, password } = req.body;
+  const acc = await readAccount({ email: email });
+
+  if (acc) {
+    log.warn("account already existed");
+    return res.status(400).json({
+      success: false,
+      message: "Already existed"
+    });
+  }
 
   const passwordHash = await bcrypt.hash(password, 10);
   log.debug("password hashed");
@@ -85,4 +94,17 @@ export async function addRole(req, res) {
   const result = await createRole({ role_name: role, level: level });
   
   verifyTransaction(user, res);
+}
+
+export async function logout(req, res) {
+  try {
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      sameSite: "lax"
+    })
+  } catch(error) {
+    throw new Error("Failed to clear cookies");
+  }
+  
+  res.status(201).json({ success: true, msg: "Successful Cleared Cookies" });
 }

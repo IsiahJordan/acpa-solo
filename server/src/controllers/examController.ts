@@ -6,21 +6,23 @@ import {
   createQuestion, readQuestion,
   createSubject, readSubject
 } from "../models/examModel.ts";
-import { addSectionAssignment, fetchSectionAssignment } from "./sharedController.ts";
+import { addSectionAssignment, fetchSectionAssignment, addExamSection, fetchExamSection } from "./sharedController.ts";
 
 export async function addExam(req, res) {
   const log = Logger.generate("addExam");
   
-  const { exam_name, description, is_visible, attempts } = req.body;
+  const { exam_name, description, is_visible, attempts, duration } = req.body;
   log.debug(`
     exam_name: ${ exam_name }, description: ${ description }, is_visible: ${ is_visible } and ${ attempts }
+    duration: ${ duration }
   `);
 
   const result = await createExam({ 
     exam_name: exam_name, 
     description: description, 
     is_visible: is_visible, 
-    attempts: attempts 
+    attempts: attempts,
+    duration: duration
   });
 
   return verifyTransaction(result, res);
@@ -29,10 +31,9 @@ export async function addExam(req, res) {
 export async function fetchExam(req, res) {
   const log = Logger.generate("fetchExam");
 
-  const { exam_name } = req.query;
-  log.debug(`exam_name: ${ exam_name }`);
+  const { exam_id } = req.query;
 
-  const result = await createExam({ exam_name: exam_name });
+  const result = await readExam({ exam_id: exam_id });
 
   return verifyRecieved(result, res);
 }
@@ -138,3 +139,30 @@ export async function fetchSubject(req, res) {
 
   return verifyRecieved(result, res);
 }
+
+export async function addExamList(req, res) {
+  const log = Logger.generate("addExamList");
+
+  const { exam_id, section_id } = req.body;
+
+  const result = await addExamSection({ 
+    exam_id: exam_id,
+    section_id: section_id
+  });
+
+  return verifyTransaction(result, res);
+}
+
+export async function fetchExamList(req, res) {
+  const log = Logger.generate("fetchExamList");
+
+  const { exam_id } = req.query;
+  log.debug(`exam_id: ${ exam_id }`);
+
+  const result = await fetchExamSection({ 
+    exam_id: exam_id
+  });
+
+  return verifyRecieved(result, res);
+}
+

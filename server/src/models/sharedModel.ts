@@ -26,6 +26,11 @@ type MetricScoreType = {
   career_name?: string;
 };
 
+type ExamSectionType = {
+  exam_id: string;
+  section_id?: string;
+};
+
 // solo insert into _metrics table 
 type MetricConnType = {
   subject_id?: number;
@@ -34,6 +39,11 @@ type MetricConnType = {
   score_bias: number;
 };
 
+type ClassroomType = {
+  class_id?: string;
+  exam_id?: string;
+  account_id?: string;
+};
 
 // you propably need to use readAccount to get the id
 export async function createAccountRole(req: AccountRoleType) {
@@ -178,6 +188,102 @@ export async function readCareerMetric(req: MetricScoreType) {
     `, [req.career_name]
   );
   
+  log.debug("finished result");
+  return verifyReads(result, log);
+}
+
+export async function createClassroomExam(req: ClassroomType) {
+  const log = Logger.generate("createClassroomExam");
+  log.info("model called");
+  log.debug(req.class_id);
+
+  const result = await pool.query(
+    `
+      INSERT INTO exam_rooms
+      (class_id, exam_id)
+      VALUES ($1, $2)
+    `, [req.class_id, req.exam_id]
+  );
+
+  log.debug("finished result");
+  return verifyCreate(result, log);
+}
+
+export async function createClassroomAccount(req: ClassroomType) {
+  const log = Logger.generate("createClassroomAccount");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      INSERT INTO account_class
+      (class_id, account_id)
+      VALUES ($1, $2)
+    `, [req.class_id, req.account_id]
+  );
+
+  log.debug("finished result");
+  return verifyCreate(result, log);
+}
+
+export async function readClassroomAccount(req: ClassroomType) {
+  const log = Logger.generate("readClassroomAccount");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      SELECT * FROM account_class
+      WHERE account_id = $1
+    `, [req.account_id]
+  );
+
+  log.debug("finished result");
+  return verifyReads(result, log);
+}
+
+export async function readClassroomExam(req: ClassroomType) {
+  const log = Logger.generate("readClassroomExam");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      SELECT * FROM exam_rooms
+      WHERE class_id = $1
+    `, [req.class_id]
+  );
+
+  log.debug("finished result");
+  return verifyReads(result, log);
+}
+
+export async function createExamSection(req: ExamSectionType) {
+  const log = Logger.generate("createExamSection");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      INSERT INTO exam_lists
+      (exam_id, section_id)
+      VALUES ($1, $2)
+    `, [req.exam_id, req.section_id]
+  );
+
+  log.debug("finished result");
+  return verifyCreate(result, log);
+}
+
+export async function readExamSection(req: ExamSectionType) {
+  const log = Logger.generate("readExamSection");
+  log.info("model called");
+
+  const result = await pool.query(
+    `
+      SELECT * FROM exam_lists AS e 
+      INNER JOIN sections AS s ON
+      s.section_id = e.section_id
+      WHERE exam_id = $1
+    `, [req.exam_id]
+  );
+
   log.debug("finished result");
   return verifyReads(result, log);
 }
